@@ -380,6 +380,7 @@ class ConfigArguments:
         elif self.data_loader_sampler == DataLoaderSampler.INDEX:
             if dataset_type is DatasetType.TRAIN:
                 self.global_index_map = self.get_global_map_index(self.file_list_train, self.total_samples_train)
+                logging.info(f"global file map = {self.global_index_map}")
             else:
                 self.global_index_map = self.get_global_map_index(self.file_list_eval, self.total_samples_eval)
 

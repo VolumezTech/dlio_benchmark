@@ -79,7 +79,8 @@ class TorchDataset(Dataset):
     def __getitem__(self, image_idx):
         self.num_images_read += 1
         step = int(math.ceil(self.num_images_read / self.batch_size))
-        logging.debug(f"{utcnow()} Rank {DLIOMPI.get_instance().rank()} reading {image_idx} sample")
+        filename = self.reader.get_filename(image_idx)
+        logging.info(f"{utcnow()} Rank {DLIOMPI.get_instance().rank()} Epoch {self.epoch_number} reading sample {image_idx} [{filename}]")
         dlp.update(step = step)
         return self.reader.read_index(image_idx, step)
 
@@ -102,6 +103,7 @@ class dlio_sampler(Sampler):
         if self.shuffle != Shuffle.OFF:
             if self.shuffle == Shuffle.SEED:
                 np.random.seed(self.seed)
+                logging.info(f"Rank {self.rank} set seed {self.seed}")
             np.random.shuffle(self.indices)
         samples_per_gpu = self.num_samples // self.size
         start = self.rank * samples_per_gpu

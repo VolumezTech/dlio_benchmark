@@ -118,6 +118,10 @@ class FormatReader(ABC):
             self.open_file_map[filename] = None
         return self._args.resized_image
 
+    def get_filename(self, global_sample_idx):
+        filename, sample_index = self._args.global_index_map[global_sample_idx]
+        return filename
+
     @abstractmethod
     def finalize(self):
         for filename, sample_index in self._args.file_map:
